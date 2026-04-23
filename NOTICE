@@ -1,0 +1,16 @@
+provider-upjet-for-cancom
+Copyright 2026 InvestifyTECH
+
+This product includes software developed by The Crossplane Authors
+(https://crossplane.io/) and generated using the Upjet code generation
+framework (https://github.com/crossplane/upjet), licensed under the
+Apache License, Version 2.0.
+
+This product incorporates resource schemas derived from the CANCOM
+Terraform Provider (https://github.com/cancom/terraform-provider-cancom),
+licensed under the Mozilla Public License, Version 2.0.
+A copy of the MPL-2.0 license is available at:
+  https://mozilla.org/MPL/2.0/
+
+This is a community project and is not officially affiliated with or
+endorsed by CANCOM GmbH.

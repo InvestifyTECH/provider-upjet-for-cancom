@@ -7,11 +7,16 @@ import (
 // ExternalNameConfigs contains all external name configurations for this
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
-	// Import requires using a randomly generated ID from provider: nl-2e21sda
-	"null_resource": idWithStub(),
+	// Bucket name is globally unique and used as the Terraform ID.
+	// Using IdentifierFromProvider keeps bucket_name explicit in forProvider,
+	// consistent with cancom_object_storage_user.
+	"cancom_object_storage_bucket": config.IdentifierFromProvider,
+
+	// User ID is a provider-generated UUID (not the username).
+	"cancom_object_storage_user": config.IdentifierFromProvider,
 }
 
-func idWithStub() config.ExternalName {
+func idWithStub() config.ExternalName { //nolint:unused // template helper, kept for reference
 	e := config.IdentifierFromProvider
 	e.GetExternalNameFn = func(tfstate map[string]any) (string, error) {
 		en, _ := config.IDAsExternalName(tfstate)

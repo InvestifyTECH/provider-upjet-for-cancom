@@ -1,12 +1,12 @@
-apiVersion: template.m.crossplane.io/v1beta1
+apiVersion: upjet-for-cancom.m.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
-  name: default
+  name: cancom
   namespace: crossplane-system
 spec:
   credentials:
     source: Secret
     secretRef:
-      name: example-creds
+      name: cancom-creds
       namespace: crossplane-system
       key: credentials

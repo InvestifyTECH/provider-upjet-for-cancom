@@ -1,40 +1,562 @@
-name: hashicorp/null
+name: cancom/cancom
 resources:
-    null_resource:
-        subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. Terraform 1.9 and later support the moved configuration block from null_resource to terraform_data. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
+    cancom_cmsmgw_connection:
+        subCategory: Managed Gateway
+        description: Represents a connection resource.
+        name: cancom_cmsmgw_connection
+        title: cancom_cmsmgw_connection Resource - terraform-provider-cancom
         examples:
-            - name: cluster
+            - name: <name of resource>
               manifest: |-
                 {
-                  "connection": [
+                  "cancom_networks": [
+                    "100.97.0.0/16"
+                  ],
+                  "connection_profile": "AZURE, CANCOOM-V01-A, CANCOM-V01-B, CANCOM-V01-C",
+                  "customer_networks": [
+                    "cidr-1",
+                    "cidr-2",
+                    "cidr-n"
+                  ],
+                  "customer_primary_gw_ip": "\u003cip of the customer gateway",
+                  "customer_secondary_gw_ip": "",
+                  "ipsec_psk_a": "123456abcdefg123456",
+                  "ipsec_psk_b": "",
+                  "mgw_id": "\u003cid of the gateway\u003e",
+                  "name_tag": "\u003cname\u003e"
+                }
+            - name: conn_tf-01
+              manifest: |-
+                {
+                  "cancom_networks": [
+                    "100.97.0.0/16"
+                  ],
+                  "connection_profile": "AZURE",
+                  "customer_networks": [
+                    "10.0.0.0/16",
+                    "10.10.0.0/16"
+                  ],
+                  "customer_primary_gw_ip": "192.168.3.1",
+                  "customer_secondary_gw_ip": "",
+                  "ipsec_psk_a": "123456abcdefg123456",
+                  "ipsec_psk_b": "",
+                  "mgw_id": "${cancom_cmsmgw_gateway.gw-tf-03.id}",
+                  "name_tag": "testconnection01"
+                }
+              references:
+                mgw_id: cancom_cmsmgw_gateway.gw-tf-03.id
+        argumentDocs:
+            cancom_networks: (List of String)
+            connection_profile: (String)
+            customer_networks: (List of String)
+            customer_primary_gw_ip: (String)
+            customer_secondary_gw_ip: (String)
+            deployment_state: (String)
+            id: (String) The ID of this resource.
+            ipsec_psk_a: (String)
+            ipsec_psk_b: (String)
+            mgw_id: (String)
+            name_tag: (String)
+        importStatements:
+            - |-
+              # You can import this resource by using its `id`
+              terraform import cancom_cmsmgw_connection.foo abc123
+    cancom_cmsmgw_gateway:
+        subCategory: Managed Gateway
+        description: Represents a gateway resource.
+        name: cancom_cmsmgw_gateway
+        title: cancom_cmsmgw_gateway Resource - terraform-provider-cancom
+        examples:
+            - name: <resource-name>
+              manifest: |-
+                {
+                  "customer": "\u003cACCT Number\u003e",
+                  "description": "\u003ca description for this gateway\u003e",
+                  "name": "\u003cname\u003e",
+                  "nat_translation": false,
+                  "size": "\u003csmall, medium, large"
+                }
+        argumentDocs:
+            bastion_lite_linux: (Boolean)
+            bastion_lite_windows: (Boolean)
+            bastion_network: (String)
+            cancom_primary_gw_ip: (String)
+            cancom_secondary_gw_ip: (String)
+            customer: (String)
+            id: (String) The ID of this resource.
+            mgw_size: (String)
+            name_tag: (String)
+            nat_network: (String)
+            nat_translation: (Boolean)
+            state: (String)
+            tag: (String)
+        importStatements:
+            - |-
+              # You can import this resource by using its `id`
+              terraform import cancom_cmsmgw_gateway.foo abc123
+    cancom_cmsmgw_translation:
+        subCategory: Managed Gateway
+        description: Represents a translation resource.
+        name: cancom_cmsmgw_translation
+        title: cancom_cmsmgw_translation Resource - terraform-provider-cancom
+        examples:
+            - name: <name of resource>
+              manifest: |-
+                {
+                  "customer_ip": "10.0.0.10",
+                  "dns_zone": "int.cc-mase.com",
+                  "mgw_id": "\u003cgateway-Id\u003e",
+                  "name_tag": "\u003cname\u003e"
+                }
+            - name: translation_tf_01
+              manifest: |-
+                {
+                  "customer_ip": "10.0.0.10",
+                  "dns_zone": "",
+                  "mgw_id": "${cancom_cmsmgw_gateway.gw-tf-03.id}",
+                  "name_tag": "testtranslation01"
+                }
+              references:
+                mgw_id: cancom_cmsmgw_gateway.gw-tf-03.id
+        argumentDocs:
+            customer_ip: (String)
+            dns_zone: (String)
+            id: (String) The ID of this resource.
+            mgw_id: (String)
+            name_tag: (String)
+            spark_ip: (String)
+        importStatements:
+            - |-
+              # You can import this resource by using its `id`
+              terraform import cancom_cmsmgw_translation.foo abc123
+    cancom_dns_record:
+        subCategory: DNS
+        description: Defines a DNS record.
+        name: cancom_dns_record
+        title: cancom_dns_record Resource - terraform-provider-cancom
+        examples:
+            - name: record
+              manifest: |-
+                {
+                  "content": "127.0.0.1",
+                  "name": "test.example.com",
+                  "type": "A",
+                  "zone_name": "example.com"
+                }
+        argumentDocs:
+            comments: (String) You can optionally add comments to records to describe their intended usage
+            content: (String) Target of the record
+            id: (String) The uuid of the record
+            last_change_date: (String) The date at which the record was last updated
+            name: (String) Name of the record
+            tenant: (String) The tenant that the record belongs to.
+            ttl: (Number) TTL, if not set, defaults to the zones TTL
+            type: (String) Type of the record (i.e. A, CNAME, ...)
+            zone_id: (String) The uuid of the zone
+            zone_name: (String) Zone that this record belongs to
+        importStatements: []
+    cancom_dynamic_cloud_vpc_project:
+        subCategory: Dynamic Cloud
+        description: Manage Dynamic Cloud VPC Projects lifecycle This creates a Virtual Private Cloud (VPC) Project with the specified name and the optional comment. The parameter users can be used to specify which user should get access to the VPC Project. !> Changing the name or comment will force the VPC Project to be recreated, i.e. all resources in the VPC Project will be deleted.
+        name: cancom_dynamic_cloud_vpc_project
+        title: cancom_dynamic_cloud_vpc_project Resource - terraform-provider-cancom
+        examples:
+            - name: basic_usage_example
+              manifest: |-
+                {
+                  "name": "test-cancom-terraform-provider",
+                  "project_comment": "Test VPC Project created with the CANCOM Terraform provider",
+                  "users": [
+                    "crn:cancom::iam:user:example.name@example.domain"
+                  ]
+                }
+        argumentDocs:
+            create: (String)
+            created_by: (String) The CRN of the user who created the VPC Project.
+            creation_date: (String) The timestamp of the date when the VPC Project was created.
+            delete: (String)
+            id: (String) The ID of this resource.
+            limits: (Map of Number) The resource limits currently configured for this VPC Project.
+            name: |-
+                (String) The user defined name used to construct the OpenStack project name with the schema tenant-name.
+                By changing this value, the old project will be deleted and a new project with the new name will be created.
+            openstack_uuid: (String) The uuid of the OpenStack Project.
+            project_comment: |-
+                (String) A comment to describe what this VPC Project is used for.
+                By changing this value, the old project will be deleted and a new project will be created.
+            tenant: (String) The id of the tenant this VPC Project belongs to.
+            timeouts: (Block, Optional) (see below for nested schema)
+            users: (Set of String) The list of users with access to the VPC Project. The list may only contains CRNs of human iam users.
+        importStatements: []
+    cancom_iam_policy:
+        subCategory: IAM
+        description: Generate a new IAM policy and attach it to users, service users and roles.
+        name: cancom_iam_policy
+        title: cancom_iam_policy Resource - terraform-provider-cancom
+        examples:
+            - name: test_policy_azure-app-management
+              manifest: |-
+                {
+                  "policy": [
                     {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
+                      "profile": "full-access"
                     }
                   ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
-                  }
+                  "principal": "${cancom_iam_user.user.id}",
+                  "service": "domdns"
                 }
+              references:
+                principal: cancom_iam_user.user.id
               dependencies:
-                aws_instance.cluster: |-
+                cancom_iam_user.user: |-
                     {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
+                      "name": "test"
+                    }
+            - name: test_policy_azure-app-management
+              manifest: |-
+                {
+                  "policy": [
+                    {
+                      "custom": {
+                        "createRecords": "*",
+                        "deleteRecords": "*",
+                        "listRecords": "*"
+                      }
+                    }
+                  ],
+                  "principal": "${cancom_iam_user.user.id}",
+                  "service": "domdns"
+                }
+              references:
+                principal: cancom_iam_user.user.id
+              dependencies:
+                cancom_iam_user.user: |-
+                    {
+                      "name": "test"
                     }
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+            custom: (Map of String) Provide a customized policy. If custom is set, it is preferred over profile
+            id: (String) The ID of this resource.
+            policy: |-
+                (Block List, Min: 1) You can choose either a profile or a custom policy.
+                This block allows to setup policies using predefined profiles (policy.profile). Profile can either be full-access or reader, providing either administrative access to the service, or read-only access.
+                If you want to manage policies on a find-grained basis, you can use policy.custom instead.
+            principal: (String) The principal that the policy should be applied to. Can be applied to Users, ServiceUsers, and Roles.
+            profile: (String) Can be set to reader, or full-access. Applies either reader or administrative access to the service.
+            service: (String) The service name to provide permissions for.
+        importStatements: []
+    cancom_iam_role:
+        subCategory: IAM
+        description: Role with short-term credentials.
+        name: cancom_iam_role
+        title: cancom_iam_role Resource - terraform-provider-cancom
+        examples:
+            - name: role
+              manifest: |-
+                {
+                  "description": "This is a test user",
+                  "name": "test-role"
+                }
+        argumentDocs:
+            created_at: (String) The initial creation date of the role.
+            created_by: (String) The initial creator of the role.
+            description: (String) Description for what the role is used for.
+            group: (String) Group that the role belongs to.
+            id: (String) The ID of this resource.
+            name: (String) Name of the role. The name of the role must be unique in your account.
+            principal: (String) CRN of the principal.
+            tenant: (String) Tenant that the role belongs to.
+        importStatements: []
+    cancom_iam_service_user:
+        subCategory: IAM
+        description: User with long-term credentials for automation purpose.
+        name: cancom_iam_service_user
+        title: cancom_iam_service_user Resource - terraform-provider-cancom
+        examples:
+            - name: su
+              manifest: |-
+                {
+                  "description": "This is a test user",
+                  "name": "test-su"
+                }
+        argumentDocs:
+            created_at: (String) The initial creation date of the service user.
+            created_by: (String) The initial creator of the service user.
+            description: (String) Description for what the service user is used for.
+            group: (String) Group that the service user belongs to.
+            id: (String) The ID of this resource.
+            name: (String) Name of the service user. The name must be unique in your account.
+            principal: (String) CRN of the service user.
+            session_hash: (String, Deprecated) Deprecated. Must not be used.
+            tenant: (String) Tenant that the service user belongs to.
+        importStatements: []
+    cancom_iam_user:
+        subCategory: IAM
+        description: IAM user authenticated against the central CANCOM SSO.
+        name: cancom_iam_user
+        title: cancom_iam_user Resource - terraform-provider-cancom
+        examples:
+            - name: user
+              manifest: |-
+                {
+                  "description": "This is a test user",
+                  "name": "test-user"
+                }
+        argumentDocs:
+            created_at: (String) The initial creation date of the user.
+            created_by: (String) The initial creator of the user.
+            description: (String) Description for what the user is used for.
+            group: (String) Group that the user belongs to.
+            id: (String) The ID of this resource.
+            name: (String) Name of the user. The name must be unique in your account.
+            principal: (String) CRN of the principal.
+            tenant: (String) Tenant that the user belongs to.
+        importStatements: []
+    cancom_ipam_host:
+        subCategory: IP Management
+        description: IPAM host allows you to assign host ip-addresses from a network that must be enabled for host assignment. The network is identified by it's id (crn).You manage networks and enable them for host-assignments by using the portal or the network resource of this provider.
+        name: cancom_ipam_host
+        title: cancom_ipam_host Resource - terraform-provider-cancom
+        examples:
+            - name: <name of resource>
+              manifest: |-
+                {
+                  "description": "\u003cdescription for this host-assignment\u003e",
+                  "name_tag": "\u003cname for this assignment\u003e",
+                  "network_crn": "crn:KmBRNWt87RV26jJfZMeJus::ip-management:network:F4tfeFwx2i7HFjNrFop49z",
+                  "qualifier": "\u003cqualifier, optional, see documentation\u003e"
+                }
+            - name: host-assignment-01
+              manifest: |-
+                {
+                  "description": "assignment created by terraform",
+                  "name_tag": "host-assignment-01",
+                  "network_crn": "${cancom_ipam_network.tfnetwork01.id}"
+                }
+              references:
+                network_crn: cancom_ipam_network.tfnetwork01.id
+            - name: host-assignment-02
+              manifest: |-
+                {
+                  "description": "assignment created by terraform",
+                  "name_tag": "host-assignment-02",
+                  "network_crn": "${cancom_ipam_network.tfnetwork01.id}"
+                }
+              references:
+                network_crn: cancom_ipam_network.tfnetwork01.id
+        argumentDocs:
+            address: (String)
+            description: (String)
+            id: (String) The ID of this resource.
+            last_updated: (String)
+            name_tag: (String)
+            network_crn: (String)
+            qualifier: (String)
+        importStatements: []
+    cancom_ipam_instance:
+        subCategory: IP Management
+        description: An IPAM instance.
+        name: cancom_ipam_instance
+        title: cancom_ipam_instance Resource - terraform-provider-cancom
+        examples:
+            - name: tfcreated01
+              manifest: |-
+                {
+                  "description": "Instance created by terraform",
+                  "managed_by": "CUSTOMER",
+                  "name_tag": "created-by-terraform",
+                  "release_wait_time": "350"
+                }
+        argumentDocs:
+            created_at: (Number)
+            description: (String)
+            id: (String) The ID of this resource.
+            managed_by: (String)
+            name_tag: (String)
+            release_wait_time: (Number)
+            updated_at: (Number)
+        importStatements: []
+    cancom_ipam_network:
+        subCategory: IP Management
+        description: IPAM networks are assigned by the service from supernets.
+        name: cancom_ipam_network
+        title: cancom_ipam_network Resource - terraform-provider-cancom
+        examples:
+            - name: <name of resource>
+              manifest: |-
+                {
+                  "description": "\u003ca description\u003e",
+                  "host_assign": "\u003ctrue or false, decides if ip-assignments are possible from the created network\u003e",
+                  "name_tag": "\u003cname\u003e",
+                  "request": "\u003csize of the network as netmask\u003e",
+                  "supernet_id": "\u003cid of the supernet this network shall be assigned from\u003e"
+                }
+            - name: tfnetwork01
+              manifest: |-
+                {
+                  "description": "erstellt über terraform",
+                  "host_assign": true,
+                  "name_tag": "network-from-tf",
+                  "request": "/25",
+                  "supernet_id": "${cancom_ipam_supernet.tfsupernet01.id}"
+                }
+              references:
+                supernet_id: cancom_ipam_supernet.tfsupernet01.id
+        argumentDocs:
+            created_at: (Number)
+            description: (String)
+            host_assign: (Boolean)
+            id: (String) The ID of this resource.
+            name_tag: (String)
+            prefix_str: (String)
+            request: (String)
+            supernet_id: (String)
+            updated_at: (Number)
+        importStatements: []
+    cancom_ipam_supernet:
+        subCategory: IP Management
+        description: IPAM Supernets are larger aggregates that are further subnetted by the service.
+        name: cancom_ipam_supernet
+        title: cancom_ipam_supernet Resource - terraform-provider-cancom
+        examples:
+            - name: <name of this resource>
+              manifest: |-
+                {
+                  "description": "\u003ca description\u003e",
+                  "instance_id": "\u003cid of the managed instance this supernet shall belong to\u003e",
+                  "name_tag": "\u003cname\u003e",
+                  "supernet_cidr": "\u003cthe prefix in cidr notation\u003e"
+                }
+            - name: tfsupernet01
+              manifest: |-
+                {
+                  "description": "supernet created by terraform",
+                  "instance_id": "${cancom_ipam_instance.tfcreated01.id}",
+                  "name_tag": "supernet-from-tf",
+                  "supernet_cidr": "10.100.0.0/16"
+                }
+              references:
+                instance_id: cancom_ipam_instance.tfcreated01.id
+        argumentDocs:
+            created_at: (Number)
+            description: (String)
+            id: (String) The ID of this resource.
+            instance_id: (String)
+            name_tag: (String)
+            supernet_cidr: (String)
+            updated_at: (Number)
+        importStatements: []
+    cancom_object_storage_bucket:
+        subCategory: Object Storage
+        description: Create and manage S3 buckets. Bucket names must be globally unique.
+        name: cancom_object_storage_bucket
+        title: cancom_object_storage_bucket Resource - terraform-provider-cancom
+        examples:
+            - name: bucket
+              manifest: |-
+                {
+                  "availability_class": "multiDc",
+                  "name": "test-bucket"
+                }
+        argumentDocs:
+            availability_class: (String) Name of the availability class. One of singleDc or multiDc.
+            bucket_name: (String) Name of the bucket. The name must be unique GLOBALLY.
+            id: (String) The ID of this resource.
+        importStatements: []
+    cancom_object_storage_user:
+        subCategory: Object Storage
+        description: 'Create a new user for the S3 API and assign permissions to the user. You can set IAM policy documents that adheres to the AWS Identity and Access Management (IAM) policy structure. The document defines permissions using a JSON-based format, following the official AWS specifications https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html for IAM policies. Example:'
+        name: cancom_object_storage_user
+        title: cancom_object_storage_user Resource - terraform-provider-cancom
+        examples:
+            - name: user
+              manifest: |-
+                {
+                  "description": "This is a test user",
+                  "permissions": "${jsonencode({\n    Statement = [\n        {\n            Effect = \"Allow\"\n            Action = \"*\"\n            Resource = \"*\"\n        }\n    ]\n  })}",
+                  "username": "svc-testuser"
+                }
+        argumentDocs:
+            access_key_id: (String, Sensitive) The access key of the user. Only included if include_credentials is set to true.
+            description: (String) Description what the user is used for
+            id: (String) The ID of this resource.
+            include_credentials: (Boolean) Add the user credentials into the Terraform state. If set, access_key_id and secret_access_key will be populated into the state. Otherwise, an empty string will be written to the state. Please note that, since the credentials are only available once, manually regenerated credentials will not be synchronized into the state. If you must reroll the credentials, please consider recreating the user instead.
+            permissions: (String) The IAM permission document.
+            secret_access_key: (String, Sensitive) Secret Access Key. Only included if include_credentials is set to true.
+            username: (String) Name of the user. The name must be unique inside your account.
+        importStatements: []
+    cancom_ssl_monitoring_ssl_monitor:
+        subCategory: SSL Monitoring
+        description: A SSL monitor item.
+        name: cancom_ssl_monitoring_ssl_monitor
+        title: cancom_ssl_monitoring_ssl_monitor Resource - terraform-provider-cancom
+        examples:
+            - name: test_ssl
+              manifest: |-
+                {
+                  "comment": "This is a test",
+                  "contact_email_cancom": "test@example.de",
+                  "domain_name": "example.com",
+                  "is_managed_by_cancom": true,
+                  "minimum_grade": "A",
+                  "port": 443,
+                  "protocol": "http"
+                }
+        argumentDocs:
+            auto_scan: (Boolean) Only relevant on resource creation. Automatically starts a scan while creating the monitoring item. This operation incurs a charge
+            comment: (String) Comment that provides more details about the item, for example what to do when an alarm is raised
+            contact_email_cancom: (String) CANCOM contact person that is responsible to exchange the certificate.
+            contact_email_customer: (String) Notification is send to the contact if an alarm is raised.
+            created_at: (Number) When was the monitoring item created.
+            created_by: (String) Who created the monitoring item.
+            domain_name: (String) Domain name to monitor. A domain name can only be monitored once.
+            id: (String) ID of the monitoring item.
+            is_managed_by_cancom: (Boolean) This item is managed by CANCOM, and a CANCOM employee is responsible to renew the certificate. Can only be set by CANCOM employees.
+            last_updated_at: (Number) Datetime of the last update.
+            last_updated_by: (String) Who was the last principal to update the item.
+            minimum_grade: (String) Alert grade. If the score falls below this score, an alarm is raised.
+            not_after: (Number) Information from the certificate, when it is about to expire.
+            port: (Number) The port to scan.
+            protocol: (String) The protocol to be monitored, i.e. http, postgresql, smtp, ...
+            ssl_scan_enabled: (Boolean) Are scans scheduled, or do we not schedule them at this moment?.
+            state: (String) State, for example finished or running.
+            tenant: (String) The tenant that created the monitoring item.
+        importStatements: []
+    cancom_windows_os_deployment:
+        subCategory: Windows OS
+        description: CANCOM Managed Windows Cloud Server deployment resource allows you to send metadata to CANCOM Windows Server management platform. ID and customer number need do be assigned to a created virtual machine with CANCOM Windows Images and allows the auto-registration, installation and integration to customer environment.
+        name: cancom_windows_os_deployment
+        title: cancom_windows_os_deployment Resource - terraform-provider-cancom
+        examples:
+            - name: windows_os
+              manifest: |-
+                {
+                  "customer_environment_id": "PN20065D",
+                  "maintenance_window_id": [
+                    "PN200438"
+                  ],
+                  "role": "ApplicationServer",
+                  "services": [
+                    "Managed OS",
+                    "Managed Antivirus"
+                  ]
+                }
+        argumentDocs:
+            customer_environment_id: (String) ID of the customer environment.
+            customer_number: (String) Customer number for Windows Management
+            id: (String) The ID of this resource.
+            maintenance_window_id: (List of String) List of maintenanceWindow IDs
+            role: (String) Role of the Machine - needs to match predefined roles.
+            services: (List of String) Services deployed and delivered to machine
+        importStatements: []
+    cancom_windows_os_deployment_progress Resource - terraform-provider-cancom:
+        subCategory: Windows OS
+        description: This data objects waits for CANCOM Manged Windows Cloud server deployment-system to complete. This can be used for dependency tracking purposes and returns in case of failure errors.The required deployment_id represents the id of cancom_windows_os_deployment resource.
+        name: cancom_windows_os_deployment_progress Resource - terraform-provider-cancom
+        title: cancom_windows_os_deployment_progress Resource - terraform-provider-cancom
+        argumentDocs:
+            deployment_id: (String) ID of the deployment object
+            errorhandling: (String) The errorhandling of deployment errors is configurable. If the output should be just warining and no interruption of the process is needed, please set the value to warning.
+            id: (String) The ID of this resource.
+            status: (String) Status of the deployment
         importStatements: []

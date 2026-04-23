@@ -1,0 +1,13 @@
+apiVersion: objectstorage.upjet-for-cancom.m.crossplane.nvst.cloud/v1alpha1
+kind: StorageBucket
+metadata:
+  annotations:
+    meta.upbound.io/example-id: objectstorage/v1alpha1/storagebucket
+  labels:
+    testing.upbound.io/example-name: bucket
+  name: bucket
+  namespace: crossplane-system
+spec:
+  forProvider:
+    availabilityClass: multiDc
+    bucketName: test-bucket

@@ -12,14 +12,22 @@ on:
         default: '1.24'
         required: false
 
+# Explicitly set permissions to override the org-level read-only restriction.
+# actions: read is required by fkirc/skip-duplicate-actions to query workflow runs.
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   publish-provider-package:
     uses: crossplane-contrib/provider-workflows/.github/workflows/publish-provider.yml@main
     with:
-      repository: provider-template
+      repository: provider-upjet-for-cancom
+      registry_org: investifytech
       version: ${{ github.event.inputs.version }}
       go-version: ${{ github.event.inputs.go-version }}
       cleanup-disk: true
+      mirror: false
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
       XPKG_MIRROR_TOKEN: ${{ secrets.XPKG_MIRROR_TOKEN }}

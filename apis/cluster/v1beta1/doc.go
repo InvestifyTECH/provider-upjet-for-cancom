@@ -1,5 +1,5 @@
-// Package v1beta1 contains the core resources of the template upjet provider.
+// Package v1beta1 contains the core resources of the upjet-for-cancom upjet provider.
 // +kubebuilder:object:generate=true
-// +groupName=template.crossplane.io
+// +groupName=upjet-for-cancom.crossplane.nvst.cloud
 // +versionName=v1beta1
 package v1beta1

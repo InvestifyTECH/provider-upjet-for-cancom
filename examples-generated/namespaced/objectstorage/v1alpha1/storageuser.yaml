@@ -1,0 +1,23 @@
+apiVersion: objectstorage.upjet-for-cancom.m.crossplane.nvst.cloud/v1alpha1
+kind: StorageUser
+metadata:
+  annotations:
+    meta.upbound.io/example-id: objectstorage/v1alpha1/storageuser
+  labels:
+    testing.upbound.io/example-name: user
+  name: user
+  namespace: crossplane-system
+spec:
+  forProvider:
+    description: This is a test user
+    permissions: |
+      {
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    username: svc-testuser

@@ -1,35 +1,27 @@
-<!--
-Thank you for helping to improve Crossplane!
-
-Please read through https://git.io/fj2m9 if this is your first time opening a
-Crossplane pull request. Find us in https://slack.crossplane.io/messages/dev if
-you need any help contributing.
--->
-
-### Description of your changes
+### Description
 
 <!--
-Briefly describe what this pull request does. Be sure to direct your reviewers'
-attention to anything that needs special consideration.
-
-We love pull requests that resolve an open Crossplane issue. If yours does, you
-can uncomment the below line to indicate which issue your PR fixes, for example
-"Fixes #500":
-
+Briefly describe what this pull request does. Direct reviewers' attention to anything that needs special consideration.
 -->
+
 Fixes #
 
-I have:
+### Type of change
 
-- [ ] Read and followed Crossplane's [contribution process].
-- [ ] Run `make reviewable test` to ensure this PR is ready for review.
+- [ ] Bug fix
+- [ ] New resource / feature
+- [ ] Code generation update (re-ran `go run cmd/generator/main.go`)
+- [ ] Documentation
+- [ ] Other
 
-### How has this code been tested
+### Checklist
+
+- [ ] `make reviewable test` passes locally
+- [ ] Generated files (`zz_*`) are up to date if schemas changed
+- [ ] README updated if new resources or behaviour were added
+
+### How has this been tested
 
 <!--
-Before reviewers can be confident in the correctness of this pull request, it
-needs to tested and shown to be correct. Briefly describe the testing that has
-already been done or which is planned for this change.
+Describe the testing done: manual verification against a CANCOM environment, unit tests, e2e tests, etc.
 -->
-
-[contribution process]: https://git.io/fj2m9
