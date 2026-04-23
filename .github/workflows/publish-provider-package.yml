@@ -12,11 +12,12 @@ on:
         default: '1.24'
         required: false
 
-# Explicitly set permissions to override the org-level read-only restriction.
-# actions: read is required by fkirc/skip-duplicate-actions to query workflow runs.
+# Explicitly set permissions here to override the org-level restriction
+# which disables write permissions by default.
+# packages: write is required to push the provider image to GHCR.
 permissions:
-  actions: read
   contents: read
+  packages: write
 
 jobs:
   publish-provider-package:
