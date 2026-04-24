@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-upjet-for-cancom
 spec:
-  package: ghcr.io/investifytech/provider-upjet-for-cancom:v0.1.0
+  package: ghcr.io/investifytech/provider-upjet-for-cancom:v0.1.1
